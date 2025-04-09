@@ -2,13 +2,32 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Hex <-> Unicode</title>
+  <title>Hex → Unicode</title>
 </head>
 <body>
-  <h1>Conversor Hex/Unicode</h1>
-  <div id="result"></div>
+  <script>
+    // Convierte texto hexadecimal (UTF-16LE) a texto Unicode legible
+    function hexToUnicode(hex) {
+      const bytes = [];
+      for (let i = 0; i < hex.length; i += 2) {
+        bytes.push(parseInt(hex.substr(i, 2), 16));
+      }
+      const buffer = new Uint8Array(bytes).buffer;
+      const decoded = new TextDecoder('utf-16le').decode(buffer);
+      return decoded;
+    }
 
-  <!-- Carga el script de abajo -->
-  <script src="app.js"></script>
+    // Lee el parámetro "hex" de la URL
+    const params = new URLSearchParams(window.location.search);
+    const hex = params.get('hex');
+
+    if (hex) {
+      const result = hexToUnicode(hex);
+      // ⚠ Esto borra el contenido de la página y deja solo el resultado como texto plano
+      document.write(result);
+    } else {
+      document.write('Error: falta el parámetro ?hex=');
+    }
+  </script>
 </body>
 </html>
